@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autoscale-skiff
+  labels:
+    app: autoscale-skiff
+    stage: test
+    owner: yaroslav.gankov
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: skiffproject3
+  template:
+    metadata:
+      labels:
+        project: skiffproject3
+        country: Ukraine
+    spec:
+      containers:
+        - name: httpd
+          image: skiffax/nginx-backend:latest
+          ports:
+            - containerPort: 80
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-autoscaling
+  spec:
+    scaleTargetRef:
+      apiVersion: app/v1
+      kind: Deployment
+      name: autoscale-skiff
+    minReplicas: 2
+    maxReplicas: 5
+    metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: 80

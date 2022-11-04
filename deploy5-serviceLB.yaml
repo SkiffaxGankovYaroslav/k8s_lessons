@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-skiff2
+  labels:
+    app: nginx-skiff2
+    stage: test
+    owner: yaroslav.gankov
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: skiff-depl-for-service-1
+  template:
+    metadata:
+      labels:
+        project: skiff-depl-for-service-1
+        country: Ukraine
+    spec:
+      containers:
+        - name: skiffax-nginx-backend
+          image: skiffax/nginx-backend:latest
+          ports:
+            - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: skiff-service-1
+  labels:
+    env: dev
+    country: Ukraine  
+spec:
+  type: LoadBalancer
+  selector:
+    project: skiff-depl-for-service-1
+  ports:
+    - name: app-listener
+      protocol: TCP
+      port: 80  #port on LB
+      targetPort: 80  #port on POD

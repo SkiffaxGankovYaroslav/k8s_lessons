@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-skiff1
+  labels:
+    app: nginx-skiff1
+    stage: test
+    owner: yaroslav.gankov
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: skiff-depl-for-service-1
+      country: Ukraine
+  template:
+    metadata:
+      labels:
+        project: skiff-depl-for-service-1
+        country: Ukraine
+    spec:
+      containers:
+        - name: skiffax-nginx-backend
+          image: skiffax/nginx-backend:latest
+          ports:
+            - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-nginx-skiff1
+  labels:
+    env: dev
+    country: Ukraine  
+spec:
+  type: NodePort
+  selector:
+    project: skiff-depl-for-service-1
+    country: Ukraine
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30007

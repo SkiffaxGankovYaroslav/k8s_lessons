@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-depl1
+  labels:
+    app: my-depl1
+    stage: test
+spec:
+  selector:
+    matchLabels:
+      project: skiffproject
+  template:
+    metadata:
+      labels:
+        project: skiffproject
+        country: Ukraine
+    spec:
+      containers:
+        - name: nginx2
+          image: nginx:latest
+          ports:
+            - containerPort: 80

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-out1
+  labels:
+    app: memory-out1
+    stage: test
+  annotations:
+    description: test when memory out
+spec:
+  replicas: 8
+  selector:
+    matchLabels:
+      project: memory-out-skiff1
+  template:
+    metadata:
+      labels:
+        project: memory-out-skiff1
+        country: Ukraine
+    spec:
+      containers:
+        - name: nginx2
+          image: nginx:latest
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "512m"
+            limits:
+              memory: "512Mi"
+              cpu: "512m"
+          ports:
+            - containerPort: 80
+
+
+
+# apt update && apt install stress && stress -v -c 4 -m 2 -i 2 -d 2
+# while true; do kubectl get pods ; kubectl get pods | wc ; sleep 2; done
+# watch -d kubectl get pods ; kubectl get pods | wc

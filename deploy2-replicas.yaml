@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-depl2
+  labels:
+    app: simple-depl2
+    stage: test
+    owner: yaroslav.gankov
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: skiffproject2
+  template:
+    metadata:
+      labels:
+        project: skiffproject2
+        country: Ukraine
+    spec:
+      containers:
+        - name: httpd
+          image: skiffax/nginx-backend:latest
+          ports:
+            - containerPort: 80
